@@ -54,19 +54,12 @@ app.get('/', function(req, res) {
 
 
 
-dns.lookup('example.com', { family: 6 }, (err, address, family) => {
-  if (err) {
-    console.error(err);
-    return;
-  }
-});
-
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
-  dns.lookup('example.com', { family: 6 }, async (err, address, family) => {
+  dns.lookup(req.body.url, async (err, address, family) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'Server error' });
+      res.status(500).json({ error: 'invalid url' });
     } else {
       const shortURL = await URLModel.create({ original_url: req.body.url });
       res.json(shortURL);
@@ -83,7 +76,7 @@ app.get('/api/shorturl/:short', async (req, res) => {
     if (url) {
       res.redirect(url.original_url);
     } else {
-      res.status(404).json({ error: 'URL not found' });
+      res.status(404).json({ error: 'invalid url' });
     }
   } catch (err) {
     console.error(err);
