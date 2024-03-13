@@ -75,7 +75,7 @@ app.post('/api/shorturl', (req, res) => {
 });
 
 
-app.get('/api/:short', async (req, res) => {
+app.get('/api/shorturl/:short', async (req, res) => {
   const { short } = req.params;
   console.log(short)
   try {
