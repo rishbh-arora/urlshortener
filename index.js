@@ -6,7 +6,10 @@ const mongoose = require('mongoose');
 let bodyParser = require("body-parser");
 const shortid = require('shortid');
 const dns = require('dns');
-
+const options = {
+  family: 0,
+  hints: dns.ADDRCONFIG | dns.V4MAPPED,
+};
 
 
 mongoose.connect(process.env.MONGO_URI);
@@ -56,10 +59,10 @@ app.get('/', function(req, res) {
 
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
-  dns.lookup(req.body.url, async (err, address, family) => {
+  dns.lookup(req.body.url,  options, async (err, address, family) => {
     if (err) {
       console.error(err);
-      res.status(500).json({ error: 'invalid url' });
+      res.json({ error: 'invalid url' });
     } else {
       const shortURL = await URLModel.create({ original_url: req.body.url });
       res.json(shortURL);
@@ -74,13 +77,13 @@ app.get('/api/shorturl/:short', async (req, res) => {
   try {
     const url = await URLModel.findOne({ short_url: short });
     if (url) {
-      res.redirect(url.original_url);
+      res.redirect(`https://${url.original_url}`);
     } else {
-      res.status(404).json({ error: 'invalid url' });
+      res.json({ error: 'invalid url' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    res.json({ error: 'Server error' });
   }
 });
 
