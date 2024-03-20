@@ -68,7 +68,7 @@ app.post('/api/shorturl', (req, res) => {
     if (err) {
       res.json({"error": "invalid url"});
     } else {
-      const shortURL = await URLModel.create({ original_url: hostname });
+      const shortURL = await URLModel.create({ original_url: `https://${hostname}` });
       console.log("shorturl generated");
       res.json({shortURL});
     }
