@@ -60,11 +60,12 @@ app.get('/', function(req, res) {
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
   try {
+  console.log("enter try");
   const hostname = new URL(req.body.url).hostname;
   console.log(hostname);
   dns.lookup(hostname,  options, async (err, address, family) => {
     if (err) {
-      throw err
+      res.json({"error": "invalid url"});
     } else {
       const shortURL = await URLModel.create({ original_url: hostname });
       console.log("shorturl generated");
@@ -72,7 +73,8 @@ app.post('/api/shorturl', (req, res) => {
     }
   });
   } catch {
-    res.json({"error": "invalid url"})
+    console.log("enter catch");
+    res.json({"error": "invalid url"});
   }
 });
 
