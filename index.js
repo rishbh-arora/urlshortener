@@ -70,7 +70,7 @@ app.post('/api/shorturl', (req, res) => {
     } else {
       const shortURL = await URLModel.create({ original_url: `https://${hostname}` });
       console.log("shorturl generated");
-      res.json({shortURL});
+      res.json({original_url: shortURL.original_url, short_url: shortURL.short_url});
     }
   });
   } catch {
@@ -85,7 +85,7 @@ app.get('/api/shorturl/:short', async (req, res) => {
   try {
     const url = await URLModel.findOne({ short_url: short });
     if (url) {
-      res.redirect(`https://${url.original_url}`);
+      res.redirect(`${url.original_url}`);
     } else {
       res.json({ error: 'invalid url' });
     }
