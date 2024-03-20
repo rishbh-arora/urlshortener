@@ -60,6 +60,7 @@ app.get('/', function(req, res) {
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
   try {
+  console.log(req.body)
   console.log("enter try");
   const hostname = new URL(req.body.url).hostname;
   console.log(hostname);
