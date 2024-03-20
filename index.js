@@ -6,8 +6,6 @@ const mongoose = require('mongoose');
 let bodyParser = require("body-parser");
 const shortid = require('shortid');
 const dns = require('dns');
-const url = require('url');
-const { hostname } = require('os');
 const options = {
   family: 0,
   hints: dns.ADDRCONFIG | dns.V4MAPPED,
@@ -62,13 +60,15 @@ app.get('/', function(req, res) {
 // Your first API endpoint
 app.post('/api/shorturl', (req, res) => {
   try {
-  const hostname = new URL(req.body.url).hostname
+  const hostname = new URL(req.body.url).hostname;
+  console.log(hostname);
   dns.lookup(hostname,  options, async (err, address, family) => {
     if (err) {
       throw err
     } else {
       const shortURL = await URLModel.create({ original_url: hostname });
-      res.json({"original_url": shortURL.original_url, "short_url": shortURL.short_url});
+      console.log("shorturl generated");
+      res.json({shortURL});
     }
   });
   } catch {
